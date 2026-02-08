@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Портал групи{% endblock %}</title>
+    <!-- Підключення CSS-->
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Портал групи</h1>
+        <nav>
+            <a href="{% url 'index' %}">Головна</a> |
+            <a href="{% url 'news' %}">Новини</a> |
+            <a href="{% url 'events' %}">Події</a> |
+            <a href="{% url 'profile' %}">Профіль</a>
+        </nav>
+        <hr>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <hr>
+        <p>© 2026 Портал групи</p>
+    </footer>
+
+    <!-- Підключення JS навсякий-->
+    <script src="{% static 'users/js/script.js' %}"></script>
+</body>
+</html>

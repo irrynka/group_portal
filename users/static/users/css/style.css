@@ -1,0 +1,21 @@
+/*Базові стилі*/
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    color: #333;
+}
+
+p {
+    color: #555;
+}
+
+header a {
+    text-decoration: none;
+}
+
+footer {
+    font-size: 0.9rem;
+}
