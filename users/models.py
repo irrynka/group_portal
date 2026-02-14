@@ -11,6 +11,7 @@ class UserRole(models.Model):
     role_id = models.ForeignKey(Role, on_delete=models.CASCADE)
 
 
+
 class Poll(models.Model):
     topic = models.CharField(max_length=128)
     description = models.TextField()
@@ -28,7 +29,8 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     class Mate:
         unique_together = ("poll_id", "user_id")
-    
+
+
 class Portfolio(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
