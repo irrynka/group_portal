@@ -42,3 +42,24 @@ class PortfolioFile(models.Model):
     type = models.CharField(max_length=10)
     file = models.FileField(null=True)
     url = models.CharField(max_length=100, null=True)
+
+class Galery(models.Model):
+    type = models.CharField(max_length=10)
+    file = models.FileField(null=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_galleries')
+    type = models.CharField(max_length=16)
+    moderated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='moderated_galleries')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Subject(models.Model):
+    name = models.CharField(max_length=64)
+
+class Grade(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    value = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
