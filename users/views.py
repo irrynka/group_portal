@@ -7,6 +7,7 @@ class poll_list(ListView):
     model = models.Poll
     context_object_name = "Polls"
     template_name = "users/poll.html"
+    paginate_by = 3
 
 class poll_detail(LoginRequiredMixin ,DetailView):
     model = models.Poll
@@ -27,6 +28,7 @@ class portfolio_list(ListView):
     model = models.Portfolio
     context_object_name = "Portfolio"
     template_name = "user/portfolion.html"
+    paginate_by = 2
 
 class portfolio_detail(LoginRequiredMixin ,DetailView):
     model = models.Portfolio
