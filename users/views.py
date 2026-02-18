@@ -24,6 +24,8 @@ class poll_create(LoginRequiredMixin, CreateView):
 
 # class poll_result
 
+###########################################################################
+
 class portfolio_list(ListView):
     model = models.Portfolio
     context_object_name = "Portfolio"
@@ -40,15 +42,19 @@ class portfolio_create(LoginRequiredMixin ,CreateView):
     context_object_name = "Portfolio_detail"
     template_name = "user/portfolion_create.html"
 
+class portfolio_delete(LoginRequiredMixin ,DeleteView):
+    model = models.Portfolio
+    context_object_name = "Portfolio_delete"
+    template_name = "user/portfolion_delete.html"
+
+###############################
+
 class portfolio_file_add(LoginRequiredMixin ,CreateView):
     model = models.PortfolioFile
     context_object_name = "Portfolio_file_add"
     template_name = "user/portfolion_create.html"
 
-class portfolio_delete(LoginRequiredMixin ,DeleteView):
-    model = models.Portfolio
-    context_object_name = "Portfolio_delete"
-    template_name = "user/portfolion_delete.html"
+
 
 class portfolio_file_delete(LoginRequiredMixin ,DeleteView):
     model = models.PortfolioFile
@@ -56,11 +62,12 @@ class portfolio_file_delete(LoginRequiredMixin ,DeleteView):
     template_name = "user/portfolion_delete.html"
 
 
-
+###################################################################################
 
      
 
-
+def index(request):
+    return render(request, "users/index.html")
 
     
 

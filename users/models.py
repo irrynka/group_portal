@@ -10,7 +10,7 @@ class UserRole(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     role_id = models.ForeignKey(Role, on_delete=models.CASCADE)
 
-
+###################################################################################
 
 class Poll(models.Model):
     topic = models.CharField(max_length=128)
@@ -36,8 +36,7 @@ class Vote(models.Model):
     def __str__(self):
         return f"{self.poll_id} {self.user_id.first_name} - {self.user_id.last_name}"
 
-    
-
+###################################################################################   
 
 class Portfolio(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -56,6 +55,8 @@ class PortfolioFile(models.Model):
     file = models.FileField(null=True)
     url = models.CharField(max_length=100, null=True)
 
+###################################################################################
+
 class Galery(models.Model):
     type = models.CharField(max_length=10)
     file = models.FileField(null=True)
@@ -66,6 +67,8 @@ class Galery(models.Model):
 
     def __str__(self):
         return f"{self.creator.username} {self.created_at}"
+
+###################################################################################
 
 class Subject(models.Model):
     name = models.CharField(max_length=64)
