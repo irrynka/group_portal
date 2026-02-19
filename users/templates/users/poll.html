@@ -1,5 +1,56 @@
-{% extends "users/base.html" %}
-{% block title %}Голосування{% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Polls</title>
+</head>
+<body>
 
-{% endblock %}
+<h1>Polls</h1>
+
+{% if Polls %}
+    <h2>All Polls</h2>
+    <ul>
+        {% for poll in Polls %}
+            <li>
+                <strong>{{ poll.topic }}</strong><br>
+                {{ poll.description }}<br>
+                Created: {{ poll.created_at }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if Poll_deteil %}
+    <h2>Poll Detail</h2>
+    <p><strong>Topic:</strong> {{ Poll_deteil.topic }}</p>
+    <p><strong>Description:</strong> {{ Poll_deteil.description }}</p>
+    <p><strong>Created:</strong> {{ Poll_deteil.created_at }}</p>
+{% endif %}
+
+
+{% if form %}
+    <h2>Create Poll</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Poll</button>
+    </form>
+{% endif %}
+
+
+{% if is_paginated %}
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+</body>
+</html>
