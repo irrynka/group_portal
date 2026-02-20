@@ -27,12 +27,12 @@ class AddPoll(forms.ModelForm):
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть варіант 4'}))
     class Meta:
         model = models.Poll
-        fields = ["text"]
+        fields = ["topic", "description"]
 
     def __init__(self, *args, **kwargs):
         super(AddPoll, self).__init__(*args, **kwargs)
 
-        self.fields['text'].widget.attrs.update({
+        self.fields['topic'].widget.attrs.update({
             "class": "form-control",
             "placeholder": "Назва"
         })

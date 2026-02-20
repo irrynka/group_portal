@@ -17,10 +17,10 @@ class poll_detail(LoginRequiredMixin ,DetailView):
     context_object_name = "Poll_deteil"
     template_name = "users/poll.html"
 
-class poll_create(LoginRequiredMixin, CreateView):
-    model = models.Poll
-    context_object_name = "Poll_create"
-    template_name = "users/poll.html"
+# class poll_create(LoginRequiredMixin, CreateView):
+#     model = models.Poll
+#     context_object_name = "Poll_create"
+#     template_name = "users/poll.html"
 
 
 # class poll_vote
