@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login
+from users.forms import SinginForm
 
 class poll_list(ListView):
     model = models.Poll
@@ -69,6 +72,24 @@ class portfolio_file_delete(LoginRequiredMixin ,DeleteView):
 def index(request):
     return render(request, "users/index.html")
 
+###################################################################################
+
+
+class CustomLoginView(LoginView):
+    template_name = "auth/login.html"
+    redirect_authenticated_user = True
+
+class CustomLogoutView(LogoutView):
+    next_page = "login"
+
+class RegisterView(CreateView):
+    template_name = "auth/singin.html"
+    form_class = SinginForm
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect("login")
     
 
 # Create your views here.
