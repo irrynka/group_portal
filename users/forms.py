@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from users import models
+from django.contrib.auth.models import User
 
 class AddPoll(forms.ModelForm):
+
     option1 = forms.CharField(
                             max_length=128,
                             label="Варіант 1",
@@ -34,3 +36,11 @@ class AddPoll(forms.ModelForm):
             "class": "form-control",
             "placeholder": "Назва"
         })
+
+
+class SinginForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = UserCreationForm.Meta.fields = ("first_name", "last_name", "email", "username")
+        
+
