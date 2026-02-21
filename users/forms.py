@@ -44,3 +44,12 @@ class SinginForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields = ("first_name", "last_name", "email", "username")
         
 
+class GaleryForm(forms.ModelForm):
+    class Meta:
+        model = models.Galery
+        fields = ['file']
+        widgets = {
+            'file': forms.ClearableFileInput(attrs={
+                'class': 'form-control', 
+            })
+        }
