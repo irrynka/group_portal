@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio Detail</title>
+</head>
+<body>
+
+<h1>Portfolio Detail</h1>
+
+{% if Portfolio_detail %}
+    <h2>{{ Portfolio_detail.title }}</h2>
+    <p>{{ Portfolio_detail.description }}</p>
+    <p>User: {{ Portfolio_detail.user.username }}</p>
+    <p>Created: {{ Portfolio_detail.created_at }}</p>
+{% else %}
+    <p>Portfolio not found.</p>
+{% endif %}
+
+</body>
+</html>

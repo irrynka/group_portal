@@ -1,6 +1,25 @@
-{% extends "users/base.html" %}
-{% block title %} {{ user.username }}, портфоліо {% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio</title>
+</head>
+<body>
 
+<h1>Portfolio List</h1>
 
-{% endblock %}
+{% if Portfolio %}
+    {% for item in Portfolio %}
+        <div>
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+            <p>User: {{ item.user.username }}</p>
+            <p>Created: {{ item.created_at }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No portfolio items.</p>
+{% endif %}
+
+</body>
+</html>
