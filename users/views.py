@@ -2,18 +2,19 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
+from users.forms import PortfolioFileForm, PortfolioUrlForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
 from django.urls import reverse_lazy
 
-class poll_list(ListView):
+class Poll_List(ListView):
     model = models.Poll
     context_object_name = "Polls"
     template_name = "users/poll.html"
     paginate_by = 3
 
-class poll_detail(LoginRequiredMixin ,DetailView):
+class Poll_Detail(LoginRequiredMixin ,DetailView):
     model = models.Poll
     context_object_name = "Poll_deteil"
     template_name = "users/poll.html"
@@ -30,61 +31,70 @@ class poll_detail(LoginRequiredMixin ,DetailView):
 
 ###########################################################################
 
-class portfolio_list(ListView):
+class Portfolio_List(ListView):
     model = models.Portfolio
-    context_object_name = "Portfolio"
+    context_object_name = "Portfolios"
     template_name = "user/portfolion.html"
     paginate_by = 2
-     
-class portfolio_create(LoginRequiredMixin ,CreateView):
-    model = models.Portfolio
-    context_object_name = "Portfolio_detail"
-    template_name = "user/portfolion_create.html"
 
-class portfolio_delete(LoginRequiredMixin ,DeleteView):
+    def get_queryset(self):
+        return models.Portfolio.objects.prefetch_related('files').all()
+     
+class Portfolio_Create(LoginRequiredMixin, CreateView):
     model = models.Portfolio
-    context_object_name = "Portfolio_delete"
+    fields = ['title', 'description']
+    template_name = "user/portfolion_create.html"
+    success_url = reverse_lazy('portfolio_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class Portfolio_Delete(LoginRequiredMixin ,DeleteView):
+    model = models.Portfolio
     template_name = "user/portfolion_delete.html"
+    success_url = reverse_lazy('portfolio_list')
 
 ###############################
 
-class portfolio_file_add(LoginRequiredMixin ,CreateView):
+class Portfolio_File_Add(LoginRequiredMixin ,CreateView):
     model = models.PortfolioFile
-    context_object_name = "Portfolio_file_add"
+    form_class = PortfolioFileForm
     template_name = "user/portfolion_create.html"
 
     def form_valid(self, form):
         form.instance.portfolio_id = self.kwargs['portfolio_id']
         form.instance.type = 'file'
-        return super().form_valid(super)
+        return super().form_valid(form)
     
     def get_success_url(self):
-        return reverse_lazy('portfolio_list', kwargs={'portfolio_id': self.object.portfolio_id})
+        return reverse_lazy('portfolio_list')
 
-class portfolio_url_add(LoginRequiredMixin ,CreateView):
+class Portfolio_Url_Add(LoginRequiredMixin ,CreateView):
     model = models.PortfolioFile
-    context_object_name = "Portfolio_url_add"
+    form_class = PortfolioUrlForm
     template_name = "user/portfolion_create.html"
 
     def form_valid(self, form):
         form.instance.portfolio_id = self.kwargs['portfolio_id']
         form.instance.type = 'url'
-        return super().form_valid(super)
+        return super().form_valid(form)
     
     def get_success_url(self):
-        return reverse_lazy('portfolio_list', kwargs={'portfolio_id': self.object.portfolio_id})
+        return reverse_lazy('portfolio_list')
+        
 
-class portfolio_media_delete(LoginRequiredMixin ,DeleteView):
+class Portfolio_Media_Delete(LoginRequiredMixin ,DeleteView):
     model = models.PortfolioFile
-    context_object_name = "Portfolio_file_delete"
     template_name = "user/portfolion_delete.html"
+    success_url = reverse_lazy('portfolio_list')
 
 
 ###################################################################################
 
      
 
-def index(request):
+def Index(request):
     return render(request, "users/index.html")
 
 ###################################################################################

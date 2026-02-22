@@ -4,7 +4,12 @@ from django.core.exceptions import ValidationError
 
 
 class Role(models.Model):
-    name = models.CharField(max_length=32)
+    PERMISSION_CHOOSE = [
+        ("User","Користувач"),
+        ("Admin","Адмін"),
+        ("Moderator","Модератор"),
+    ]
+    name = models.CharField(max_length=32 ,choices=PERMISSION_CHOOSE)
 
 
 class UserRole(models.Model):
@@ -56,7 +61,7 @@ class PortfolioFile(models.Model):
         ("Link","Посилання"),
     ]
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
-    type = models.CharField(max_length=10, choices=TYPE_CHOOSE)
+    type = models.CharField(max_length=16, choices=TYPE_CHOOSE)
     url = models.URLField(max_length=100, blank=True, null=True)
     file = models.FileField(upload_to="portfolio_media/", blank=True, null=True)
 
