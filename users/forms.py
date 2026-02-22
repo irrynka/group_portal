@@ -49,7 +49,27 @@ class GaleryForm(forms.ModelForm):
         model = models.Galery
         fields = ['file']
         widgets = {
-            'file': forms.ClearableFileInput(attrs={
+            'file': forms.FileInput(attrs={
+                'class': 'form-control', 
+            })
+        }
+
+class PortfolioFileForm(forms.ModelForm):
+    class Meta:
+        model = models.PortfolioFile
+        fields = ['file']
+        widgets = {
+            'file': forms.FileInput(attrs={
+                'class': 'form-control', 
+            })
+        }
+
+class PortfolioUrlForm(forms.ModelForm):
+    class Meta:
+        model = models.PortfolioFile
+        fields = ['url']
+        widgets = {
+            'url': forms.URLInput(attrs={
                 'class': 'form-control', 
             })
         }

@@ -5,6 +5,7 @@ from users import models
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
+from django.urls import reverse_lazy
 
 class poll_list(ListView):
     model = models.Poll
@@ -34,11 +35,6 @@ class portfolio_list(ListView):
     context_object_name = "Portfolio"
     template_name = "user/portfolion.html"
     paginate_by = 2
-
-class portfolio_detail(LoginRequiredMixin ,DetailView):
-    model = models.Portfolio
-    context_object_name = "Portfolio_detail"
-    template_name = "user/portfolion_detail.html"
      
 class portfolio_create(LoginRequiredMixin ,CreateView):
     model = models.Portfolio
@@ -57,9 +53,28 @@ class portfolio_file_add(LoginRequiredMixin ,CreateView):
     context_object_name = "Portfolio_file_add"
     template_name = "user/portfolion_create.html"
 
+    def form_valid(self, form):
+        form.instance.portfolio_id = self.kwargs['portfolio_id']
+        form.instance.type = 'file'
+        return super().form_valid(super)
+    
+    def get_success_url(self):
+        return reverse_lazy('portfolio_list', kwargs={'portfolio_id': self.object.portfolio_id})
 
+class portfolio_url_add(LoginRequiredMixin ,CreateView):
+    model = models.PortfolioFile
+    context_object_name = "Portfolio_url_add"
+    template_name = "user/portfolion_create.html"
 
-class portfolio_file_delete(LoginRequiredMixin ,DeleteView):
+    def form_valid(self, form):
+        form.instance.portfolio_id = self.kwargs['portfolio_id']
+        form.instance.type = 'url'
+        return super().form_valid(super)
+    
+    def get_success_url(self):
+        return reverse_lazy('portfolio_list', kwargs={'portfolio_id': self.object.portfolio_id})
+
+class portfolio_media_delete(LoginRequiredMixin ,DeleteView):
     model = models.PortfolioFile
     context_object_name = "Portfolio_file_delete"
     template_name = "user/portfolion_delete.html"

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 class Role(models.Model):
@@ -50,10 +51,21 @@ class Portfolio(models.Model):
 
 
 class PortfolioFile(models.Model):
+    TYPE_CHOOSE = [
+        ("File","Файл"),
+        ("Link","Посилання"),
+    ]
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
-    type = models.CharField(max_length=10)
-    file = models.FileField(null=True)
-    url = models.CharField(max_length=100, null=True)
+    type = models.CharField(max_length=10, choices=TYPE_CHOOSE)
+    url = models.URLField(max_length=100, blank=True, null=True)
+    file = models.FileField(upload_to="portfolio_media/", blank=True, null=True)
+
+    def clean(self):
+        if self.type == "file" and not self.file:
+            raise ValidationError("Файл обов'язковий для типу 'file'")
+        if self.type == "url" and not self.url:
+            raise ValidationError("Посилання обов'язковий для типу 'url'")
+
 
 ###################################################################################
 
