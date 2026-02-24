@@ -10,17 +10,17 @@ class AddPoll(forms.ModelForm):
                             label="Варіант 1",
                             required= True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть варіант 1'}))
-    option1 = forms.CharField(
+    option2 = forms.CharField(
                             max_length=128,
                             label="Варіант 2",
                             required= True,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть варіант 2'}))
-    option1 = forms.CharField(
+    option3 = forms.CharField(
                             max_length=128,
                             label="Варіант 3",
                             required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введіть варіант 3'}))
-    option1 = forms.CharField( 
+    option4 = forms.CharField( 
                             max_length=128,
                             label="Варіант 4",
                             required=False,
@@ -38,6 +38,18 @@ class AddPoll(forms.ModelForm):
         })
 
 
+class VoteForm(forms.Form):
+    option = forms.ModelChoiceField(
+        queryset=None,
+        widget=forms.RadioSelect,
+        empty_label=None,
+        label="Оберіть варіант"
+    )
+
+    def __init__(self, poll, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['option'].queryset = poll.options.all()
+        
 class SinginForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
