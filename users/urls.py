@@ -3,8 +3,13 @@ from users import views
 
 urlpatterns = [
     path("", views.Index, name="index"),
+
     path("poll/", views.Poll_List.as_view(), name="poll_list"),
-    # path("poll_add/", views.poll_create.as_view(), name="poll_add"),
+    path("poll/<int:pk>/", views.Poll_Detail.as_view(), name="poll_detail"),
+    path("poll/create/", views.Poll_Create.as_view(), name="poll_create"),
+    path("poll/<int:pk>/vote/", views.Poll_Vote.as_view(), name="poll_vote"),
+
+    
 
     path("portfolio/", views.Portfolio_List.as_view(), name="portfolio_list"),
     path("portfolio/create/", views.Portfolio_Create.as_view, name="portfolia_create"),

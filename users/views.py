@@ -1,33 +1,112 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
-from users.forms import PortfolioFileForm, PortfolioUrlForm
+from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 class Poll_List(ListView):
     model = models.Poll
-    context_object_name = "Polls"
+    context_object_name = "polls"
     template_name = "users/poll.html"
     paginate_by = 3
 
 class Poll_Detail(LoginRequiredMixin ,DetailView):
     model = models.Poll
-    context_object_name = "Poll_deteil"
-    template_name = "users/poll.html"
+    context_object_name = "poll"
+    template_name = "users/poll_details.html"
 
-# class poll_create(LoginRequiredMixin, CreateView):
-#     model = models.Poll
-#     context_object_name = "Poll_create"
-#     template_name = "users/poll.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        poll = self.object
+
+        if self.request.user.is_authenticated:
+            context['has_voted'] = models.Vote.objects.filter(
+                poll=poll,
+                user=self.request.user
+            ).exists()
+        else:
+            context['has_voted'] = False
+
+        context['form'] = VoteForm(poll=poll)
+
+        options_with_votes = []
+        total_votes = poll.votes.count()
+
+        for option in poll.options.all():
+            vote_count = models.Vote.objects.filter(option=option).count()
+            percentage = (vote_count / total_votes * 100) if total_votes > 0 else 0
+            options_with_votes.append({
+                "option": option,
+                "count": vote_count,
+                "percentage": round(percentage, 1)
+            })
+        
+        context['options_with_votes'] = options_with_votes
+        context['total_votes'] = total_votes
+
+        return context
+
+class Poll_Create(LoginRequiredMixin, CreateView):
+    model = models.Poll
+    form_class = AddPoll
+    template_name = "users/poll_create.html"
+    success_url = reverse_lazy('poll_list')
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        poll = form.save()
+
+        option1 = form.cleaned_data.get('option1')
+        option2 = form.cleaned_data.get('option2')
+        option3 = form.cleaned_data.get('option3')
+        option4 = form.cleaned_data.get('option4')
+
+        if option1:
+            models.PollOption.objects.create(poll=poll, text=option1)
+        if option2:
+            models.PollOption.objects.create(poll=poll, text=option2)
+        if option3:
+            models.PollOption.objects.create(poll=poll, text=option3)
+        if option4:
+            models.PollOption.objects.create(poll=poll, text=option4)
+
+        return super().form_valid(form)
 
 
-# class poll_vote
 
-# class poll_result
+
+
+
+class Poll_Vote(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        poll = get_object_or_404(models.Poll, pk=pk)
+
+        if models.Vote.objects.filter(poll=poll, user=request.user).exists():
+            messages.error(request, 'Ви вже проголусували за цей варіант')
+            return redirect('poll_detail', pk=pk)
+        
+        form = VoteForm(poll, request.POST)
+        if form.is_valid():
+            option = form.cleaned_data['option']
+            models.Vote.objects.create(
+                poll=poll,
+                option=option,
+                user=request.user
+            )
+            messages.success(request, "Голос зарахований")
+        else:
+            messages.error(request, "Оберіть варіант відповіді")
+        
+        return redirect('poll_detail', pk=pk)
+
+
+
+
 
 ###########################################################################
 
