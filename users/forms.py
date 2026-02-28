@@ -85,3 +85,17 @@ class PortfolioUrlForm(forms.ModelForm):
                 'class': 'form-control', 
             })
         }
+
+class AddGradeForm(forms.ModelForm):
+    model = models.Grade
+    fields = ['student', 'subject', 'value']
+    widgets = {
+        'student': forms.Select(attrs={'class': 'form-control'}),
+        'subject': forms.Select(attrs={'class': 'form-control'}),
+        'value': forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': 1,
+            'max': 100,
+            'placeholder': 'Оцінка (1-100)'
+        })
+    }

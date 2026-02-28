@@ -20,6 +20,11 @@ urlpatterns = [
 
     path("media/<int:pk>/delete/", views.Portfolio_Media_Delete.as_view(), name="media_delete"),
 
+    path("grades/", views.Grade_List.as_view(), name="grade_list"),
+    path("grades/create/", views.Grade_Create.as_view(), name="grade_create"),
+    path("grades/<ink:pk>/edit/", views.Grade_Update.as_view(), name="grade_update"),
+    path("grades/<ink:pk>/delete/", views.Grade_Delete.as_view(), name="grade_delete"),
+    
     path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", views.CustomLogoutView.as_view(), name="logout"),
     path("register/", views.RegisterView.as_view(), name="register"),

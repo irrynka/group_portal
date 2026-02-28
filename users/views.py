@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
-from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm
+from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
@@ -167,6 +167,49 @@ class Portfolio_Media_Delete(LoginRequiredMixin ,DeleteView):
     model = models.PortfolioFile
     template_name = "user/portfolion_delete.html"
     success_url = reverse_lazy('portfolio_list')
+
+
+###################################################################################
+
+class Grade_List(ListView):
+    model = models.Grade
+    context_object_name = 'grades'
+    template_name = 'users/grade_list.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = models.Grade.objects.select_related('student', 'subject').order_by('-created_at')
+        student_id = self.request.GET.get('student')
+
+        if student_id:
+            queryset = queryset.filter(student_id=student_id)
+
+        subject_id = self.request.GET.get('subject')
+        
+        if subject_id:
+            queryset = queryset.filter(subject_id=subject_id)
+
+        return queryset
+
+class Grade_Create(LoginRequiredMixin, CreateView):
+    model = models.Grade
+    form_class = AddGradeForm
+    template_name = 'user/grade_create.html'
+    success_url = reverse_lazy('grade_list')
+
+class Grade_Update(LoginRequiredMixin, UpdateView):
+    model = models.Grade
+    form_class = AddGradeForm
+    template_name = 'user/grade_update.html'
+    success_url = reverse_lazy('grade_list')
+
+class Grade_Delete(LoginRequiredMixin, DeleteView):
+    model = models.Grade
+    template_name = 'user/grade_delete.html'
+    success_url = reverse_lazy('grade_list')
+
+
+
 
 
 ###################################################################################
