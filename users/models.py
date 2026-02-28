@@ -90,7 +90,7 @@ class Subject(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self):
-        return {self.name}
+        return self.name
 
 class Grade(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
