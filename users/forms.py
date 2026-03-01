@@ -63,6 +63,7 @@ class GaleryForm(forms.ModelForm):
         widgets = {
             'file': forms.FileInput(attrs={
                 'class': 'form-control', 
+                'accept': 'image/*,video/*'
             })
         }
 
@@ -87,6 +88,8 @@ class PortfolioUrlForm(forms.ModelForm):
         }
 
 class AddGradeForm(forms.ModelForm):
+
+
     model = models.Grade
     fields = ['student', 'subject', 'value']
     widgets = {

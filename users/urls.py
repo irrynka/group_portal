@@ -22,8 +22,16 @@ urlpatterns = [
 
     path("grades/", views.Grade_List.as_view(), name="grade_list"),
     path("grades/create/", views.Grade_Create.as_view(), name="grade_create"),
-    path("grades/<ink:pk>/edit/", views.Grade_Update.as_view(), name="grade_update"),
-    path("grades/<ink:pk>/delete/", views.Grade_Delete.as_view(), name="grade_delete"),
+    path("grades/<int:pk>/edit/", views.Grade_Update.as_view(), name="grade_update"),
+    path("grades/<int:pk>/delete/", views.Grade_Delete.as_view(), name="grade_delete"),
+
+    path("galery/", views.Galery_List.as_view(), name='galery_list'),
+    path("galery/upload/", views.Galery_Upload.as_view(), name='galery_upload'),
+    path("galery/moderate/", views.Gallery_Moderation.as_view(), name='galery_moderate'),
+    path("galery/<int:pk>/approve/", views.Galery_Approve.as_view(), name='galery_approve'),
+    path("galery/<int:pk>/reject/", views.Galery_Delete.as_view(), name='galery_delete'),
+    
+
     
     path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", views.CustomLogoutView.as_view(), name="logout"),
