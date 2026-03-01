@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
-from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm
+from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.utils import timezone
 
 class Poll_List(ListView):
     model = models.Poll
@@ -213,6 +214,62 @@ class Grade_Delete(LoginRequiredMixin, DeleteView):
 
 
 ###################################################################################
+
+class Galery_List(ListView):
+    model = models.Galery
+    context_object_name = 'galery_media'
+    template_name = 'user/galery.html'
+    paginate_by = 6
+
+    def get_queryset(self):
+        return models.Galery.objects.filter(is_approved=True)
+    
+
+class Galery_Upload(LoginRequiredMixin, CreateView):
+    model = models.Galery
+    form_class = GaleryForm
+    template_name = 'user/galery_upload.html'
+    success_url = reverse_lazy('galery_list')
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        form.instance.is_approved = False
+
+        file = form.cleaned_data['file']
+        exception = file.name.split('.')[-1].lower()
+        form.instance.type = 'photo' if exception in ['jpg', 'jpeg', 'png', 'gif', 'webp'] else 'video'
+
+        messages.success(self.request, 'Медіа файл відпавлено до модерації')
+        return super().form_valid(form)
+    
+class Gallery_Moderation(LoginRequiredMixin, ListView):
+    model = models.Galery
+    context_object_name = 'galery_media_moderate'
+    template_name = 'user/galery_moderation.html'
+
+    def get_queryset(self):
+        return models.Galery.objects.filter(is_approved=True)
+    
+class Galery_Approve(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        media_item = get_object_or_404(models.Galery, pk=pk)
+        media_item.is_approved = True
+        media_item.moderated_by = request.user
+        media_item.moderated_at = timezone.now()
+        media_item.save()
+        messages.success(request, "Перевірено")
+        return redirect('galery_moderation')
+    
+class Galery_Delete(LoginRequiredMixin, DeleteView):
+    model = models.Galery
+    success_url = reverse_lazy('galery_moderation')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Відхилено')
+        return super().delete(request, *args, **kwargs)
+
+###################################################################################
+
 
      
 
