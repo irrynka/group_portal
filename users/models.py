@@ -106,6 +106,67 @@ class Grade(models.Model):
     def __str__(self):
         return f"{self.student.first_name} {self.student.last_name} {self.subject} {self.value}"
 
+###################################################################################
 
 
+class Event(models.Model):
+    title = models.CharField(max_length=128)
+    description = models.TextField()
+    date_start = models.TimeField()
+    date_end = models.TimeField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+###################################################################################
+
+class Material(models.Model):
+    TYPE_CHOOSE = [
+        ("File","Файл"),
+        ("Link","Посилання"),
+        ("Photo","Фотографія"),
+        ("Video","Відео")
+    ]
+
+    title = models.CharField(max_length=128)
+    description = models.TextField()
+    type = models.CharField(max_length=16, choices=TYPE_CHOOSE)
+    url = models.URLField(max_length=100, blank=True, null=True)
+    file = models.FileField(upload_to="portfolio_media/", blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class Anonts(models.Model):
+    title = models.CharField(max_length=128)
+    content = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+###################################################################################
+
+
+class Category(models.Model):
+    title = models.CharField(max_length=128)
+    description = models.TextField()
+
+class Message(models.Model):
+    topic = models.CharField(max_length=128)
+    content = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Topic(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    title = models.CharField(max_length=128)
+    description = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+###################################################################################
+
+
+class Profile(models.Model):
+    biografy = models.TextField()
+    phone = models.CharField(max_length=32)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
