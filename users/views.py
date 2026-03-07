@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
-from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm
+from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm, AddAnonts
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
@@ -270,8 +270,44 @@ class Galery_Delete(LoginRequiredMixin, DeleteView):
 
 ###################################################################################
 
+class Anonts_List(LoginRequiredMixin, ListView):
+    model = models.Anonts
+    context_object_name = "anonts"
+    template_name = "user/anonts_list.html"
+    paginate_by = 3
 
-     
+
+class Anonts_Create(LoginRequiredMixin, CreateView):
+    model = models.Anonts
+    form_class = AddAnonts
+    template_name = "user/anonts_create.html"
+    success_url = reverse_lazy('anonts_list')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+    
+
+class Anonts_Update(LoginRequiredMixin, UpdateView):
+    model = models.Anonts
+    form_class = AddAnonts
+    template_name = "user/anonts_update.html"
+    success_url = reverse_lazy('anonts_list')
+
+class Anonts_Delete(LoginRequiredMixin, DeleteView):
+    model = models.Anonts
+    template_name = "user/anonts_delete.html"
+    success_url = reverse_lazy('anonts_list')
+
+    
+
+
+
+
+
+
+
+###################################################################################  
 
 def Index(request):
     return render(request, "users/index.html")
