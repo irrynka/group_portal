@@ -113,3 +113,24 @@ class AddAnonts(forms.ModelForm):
                             'rows': 3
         })
     }
+
+class AddEvent(forms.ModelForm):
+    class Meta:
+        model = models.Event
+        fields = ['title', 'description', 'date_start', 'date_end']
+        widgets = {
+            'title': forms.TextInput(attrs={'class' : 'form-control'}),
+            'description': forms.Textarea(attrs={
+                            'class': 'form-control',
+                            'rows': 3
+            }),
+            'date_start': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'type': 'datetime-local'
+            }),
+            'date_end': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'type': 'datetime-local'
+            }),
+        
+        }
