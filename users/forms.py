@@ -102,3 +102,14 @@ class AddGradeForm(forms.ModelForm):
             'placeholder': 'Оцінка (1-100)'
         })
     }
+
+class AddAnonts(forms.ModelForm):
+    model = models.Anonts
+    fields = ['title', 'content']
+    widgets = {
+        'title': forms.TextInput(attrs={'class': 'form-control'}),
+        'content': forms.Textarea(attrs={
+                            'class': 'form-control',
+                            'rows': 3
+        })
+    }

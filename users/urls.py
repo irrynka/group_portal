@@ -30,6 +30,12 @@ urlpatterns = [
     path("galery/moderate/", views.Gallery_Moderation.as_view(), name='galery_moderate'),
     path("galery/<int:pk>/approve/", views.Galery_Approve.as_view(), name='galery_approve'),
     path("galery/<int:pk>/reject/", views.Galery_Delete.as_view(), name='galery_delete'),
+
+    path('anonts/', views.Anonts_List.as_view(), name='anonts_list'),
+    path('anonts/create/', views.Anonts_Create.as_view(), name='anonts_create'),
+    path('anonts/<int:pk>/edit/', views.Anonts_Update.as_view(), name='anonts_update'),
+    path('anonts/<int:pk>/delete/', views.Anonts_Delete.as_view(), name='anonts_delete'),
+
     
 
     

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class Role(models.Model):
@@ -112,10 +113,16 @@ class Grade(models.Model):
 class Event(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField()
-    date_start = models.TimeField()
-    date_end = models.TimeField()
+    date_start = models.DateTimeField()  
+    date_end = models.DateTimeField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.title} - {self.date_start}"
+    
+    class Meta:
+        ordering = ['date_start'] 
 ###################################################################################
 
 class Material(models.Model):
@@ -135,12 +142,21 @@ class Material(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+###################################################################################
 
 class Anonts(models.Model):
     title = models.CharField(max_length=128)
     content = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.created_by}"
+        
+    
+    class Meta:
+        ordering = ['-created_at']
+
 
 ###################################################################################
 
