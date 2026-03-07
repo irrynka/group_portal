@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
-from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm, AddAnonts
+from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm, AddAnonts, AddEvent
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
@@ -300,6 +300,40 @@ class Anonts_Delete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('anonts_list')
 
     
+###################################################################################
+
+class Event_List(ListView):
+    model = models.Event
+    context_object_name = "events"
+    template_name = "users/event_list.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return models.Event.objects.filter(date_end__gre=timezone.now())
+    
+
+class Event_Create(LoginRequiredMixin, CreateView):
+    model = models.Event
+    form_class = AddEvent
+    template_name = 'user/event_create.html'
+    success_url = reverse_lazy('event_list')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+    
+class Event_Update(LoginRequiredMixin, UpdateView):
+    model = models.Event
+    form_class = AddEvent
+    template_name = "users/event_edit.html"
+    success_url = reverse_lazy('event_list')
+
+class Event_Delete(LoginRequiredMixin, DeleteView):
+    model = models.Event
+    template_name = "users/event_delete.html"
+    success_url = reverse_lazy('event_list')
+
+
 
 
 

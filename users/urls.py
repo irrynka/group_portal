@@ -36,7 +36,13 @@ urlpatterns = [
     path('anonts/<int:pk>/edit/', views.Anonts_Update.as_view(), name='anonts_update'),
     path('anonts/<int:pk>/delete/', views.Anonts_Delete.as_view(), name='anonts_delete'),
 
+    path('event/', views.Event_List.as_view(), name='event_list'),
+    path('event/create/', views.Event_Create.as_view(), name='event_create'),
+    path('event/<int:pk>/edit', views.Event_Update.as_view(), name='event_update'),
+    path('event/<int:pk>/delete', views.Event_Delete.as_view(), name='event_delete'),
     
+    
+
 
     
     path("login/", views.CustomLoginView.as_view(), name="login"),
