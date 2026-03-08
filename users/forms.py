@@ -134,3 +134,30 @@ class AddEvent(forms.ModelForm):
             }),
         
         }
+
+class AddTopic(forms.ModelForm):
+    class Meta:
+        model = models.Topic
+        fields = ['category', 'title', 'description']
+        widgets = {
+            'caterogy': forms.Select(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={ 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={
+                            'class': 'form-control',
+                            'rows': 3
+        }),                            
+
+            
+        }
+            
+class AddMessage(forms.ModelForm):
+    class Meta:
+        model = models.Message
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3
+            }),
+        }
+        

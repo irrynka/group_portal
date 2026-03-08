@@ -40,9 +40,17 @@ urlpatterns = [
     path('event/create/', views.Event_Create.as_view(), name='event_create'),
     path('event/<int:pk>/edit', views.Event_Update.as_view(), name='event_update'),
     path('event/<int:pk>/delete', views.Event_Delete.as_view(), name='event_delete'),
-    
-    
 
+    
+    path('forum/', views.Forum_Categories.as_view, name='forum_categories'),
+    path('forum/category/<int:category_id>/', views.Categories_Topics.as_view, name='category_topics'),
+    path('forum/topic/<int:pk>', views.Topic_Messages.as_view, name='topic_messages'),
+
+    path('forum/topic/create/', views.Topic_Create.as_view, name='topic_create'),
+    path('forum/topic/<int:pk>/edit/', views.Topic_Update.as_view, name='forum_update'),
+    path('forum/topic/<int:pk>/delete/', views.Topic_Delete.as_view, name='forum_delete'),
+
+    path('forum/topic/<int:topic_id>/message/', views.Message_Create.as_view(), name="message_create"),
 
     
     path("login/", views.CustomLoginView.as_view(), name="login"),

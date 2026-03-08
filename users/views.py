@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models
-from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm, AddAnonts, AddEvent
+from users.forms import PortfolioFileForm, PortfolioUrlForm, AddPoll, VoteForm, AddGradeForm, GaleryForm, AddAnonts, AddEvent, AddMessage, AddTopic
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from users.forms import SinginForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.utils import timezone
 
@@ -332,6 +332,80 @@ class Event_Delete(LoginRequiredMixin, DeleteView):
     model = models.Event
     template_name = "users/event_delete.html"
     success_url = reverse_lazy('event_list')
+
+
+###################################################################################  
+
+class Forum_Categories(ListView):
+    model = models.Category
+    context_object_name = 'categories'
+    template_name = "users/forum_categories.html"
+
+class Categories_Topics(ListView):
+    model = models.Topic
+    context_object_name = "topics"
+    template_name = "users/categories_topics.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        self.category = get_object_or_404(models.Category, pk=self.kwargs['category_id'])
+        return models.Topic.objects.filter(category=self.category)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.category
+        return context
+    
+class Topic_Messages(DeleteView):
+    model = models.Topic
+    context_object_name = 'topic'
+    template_name = "users/topic_messages.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = self.object.messages.select_related('created_by')
+        context['form'] = AddMessage()
+        return context
+
+class Topic_Create(LoginRequiredMixin, CreateView):
+    model = models.Topic
+    form_class = AddTopic
+    template_name = "users/add_topic.html"
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('category_topics', kwargs={'category_id': self.object.category_id})
+    
+class Topic_Update(LoginRequiredMixin, UpdateView):
+    model = models.Topic
+    form_class = AddTopic
+    template_name = "users/topic_update.html"
+
+    def get_success_url(self):
+        return reverse('topic_messages', kwargs={'pk': self.object.pk})
+    
+class Topic_Delete(LoginRequiredMixin, DeleteView):
+    model = models.Topic
+    template_name = "users/topic_delete.html"
+
+    def get_success_url(self):
+        return reverse('category_topics', kwargs={'category_id': self.object.category_id})
+
+class Message_Create(LoginRequiredMixin, CreateView):
+    model = models.Message
+    form_class = AddMessage
+
+    def form_valid(self, form):
+        form.instance.topic_id = self.kwargs['topic_id']
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('topic_messages', kwargs={'pk', self.kwargs['topic_id']})
+
 
 
 

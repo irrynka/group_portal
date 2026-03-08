@@ -165,11 +165,8 @@ class Category(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField()
 
-class Message(models.Model):
-    topic = models.CharField(max_length=128)
-    content = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.title
 
 
 class Topic(models.Model):
@@ -177,7 +174,26 @@ class Topic(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
     
+    class Meta:
+        ordering = ['-created_at']
+
+class Message(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='messages')
+    content = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.created_by.username} - {self.created_at}"
+    
+    class Meta:
+        ordering = ['-created_at']
+
 ###################################################################################
 
 
